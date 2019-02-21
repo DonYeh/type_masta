@@ -1,4 +1,4 @@
-import pygame
+renderimport pygame
 import sys
 import requests
 from pygame.locals import *
