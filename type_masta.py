@@ -28,7 +28,9 @@ def main():
     word_to_spell = word_bank()
 
     stop_game = False
+    index = 0
     while not stop_game:
+
         for event in pygame.event.get():
 
             # Event handlings
@@ -36,13 +38,25 @@ def main():
                 if event.unicode.isalpha():
                     typed_letter = event.unicode
                     print(word_to_spell)
+                    # print(type(word_to_spell))
                     print(typed_letter)
                     # take the letter from user input (event.unicode) and compare it to the
                     # corresponding letter in the word_to_spell
-                    if compare(typed_letter, word_to_spell[0]):
+                    if (compare(typed_letter, word_to_spell[index]) and index < (len(word_to_spell))):
                         print("YEAAAAAASSSS")
+                        print(index)
+                        index += 1
+                        if index == len(word_to_spell): 
+                            index = 0
+                            word_to_spell = word_bank()
+                        # continue
+
                     else:
                         print("you suck again!")
+                        print(index)
+                        # index = 0
+                        # word_to_spell = word_bank()
+
                 elif event.key == pygame.K_BACKSPACE:
                     typed_letter = typed_letter[:-1]
                 elif event.key == pygame.K_RETURN:
