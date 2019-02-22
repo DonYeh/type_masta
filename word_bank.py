@@ -12,8 +12,11 @@ def word_bank():
     for word in WORDS:
         word_list.append(word)
 
-    converted_word = bytes(random.choice(word_list), 'utf-8')
-    return converted_word
+    # converted_word = bytes(random.choice(word_list), 'utf-8')
+    word_to_spell = random.choice(word_list)
+
+    return word_to_spell
+    # return converted_word
     # random.choice(word_list) #picks a random item from the list
 
 
