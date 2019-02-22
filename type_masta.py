@@ -46,17 +46,12 @@ def main():
                         print("YEAAAAAASSSS")
                         print(index)
                         index += 1
-                        if index == len(word_to_spell): 
+                        if index == len(word_to_spell):
                             index = 0
                             word_to_spell = word_bank()
-                        # continue
-
                     else:
                         print("you suck again!")
                         print(index)
-                        # index = 0
-                        # word_to_spell = word_bank()
-
                 elif event.key == pygame.K_BACKSPACE:
                     typed_letter = typed_letter[:-1]
                 elif event.key == pygame.K_RETURN:
