@@ -16,11 +16,13 @@ def main():
     green = (128, 255, 0)
     red = (204, 0, 0)
     black = (0, 0, 0)
+    white = (255, 255, 255)
 
     # initialize pygame and create window
     pygame.init()
     pygame.mixer.init()  # for sounds
-    font = pygame.font.Font(None, 77)
+    font = pygame.font.SysFont('Monaco', 77)
+
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('My Game')
     clock = pygame.time.Clock()
@@ -36,15 +38,20 @@ def main():
     stop_game = False
     typed_letter = ""
     letters_to_color = ""
+    incorrect_letter_to_color = ""
     # color_typed_letter = ""
     index = 0
     word_to_spell = word_bank()  # call word_bank to generate a random word
+    # music = pygame.mixer.music.load("<filename>")
+    # correct_sound = pygame.mixer.Sound.load("<filename>")
+    # incorrect_sound = pygame.mixer.Sound.load("<filename>")
 
     while not stop_game:
         # Process input (events)
         for event in pygame.event.get():
             # Event handlings
             if event.type == pygame.KEYDOWN:
+                print(sorted(pygame.font.get_fonts()))
                 if event.unicode.isalpha() or "'":
                     typed_letter = event.unicode
                     print(word_to_spell)
@@ -55,6 +62,7 @@ def main():
 
                     if (compare(typed_letter, word_to_spell[index]) and index < (len(word_to_spell))):
                         print("YEAAAAAASSSS")
+                        correct_sound.play()
                         print("index: %d " % index)
                         # print(type(word_to_spell[index])) #string
                         print("word length: %d" % len(word_to_spell))
@@ -75,6 +83,12 @@ def main():
 
                     else:
                         print("noooope!")
+                        # incorrect_sound.play()
+                        a_space = ' '
+                        # can't get the string to align the letter correctly...
+                        incorrect_letter_to_color = word_to_spell[:(index+1)]
+                        print("Index of the incorrect letter typed: %d" % index)
+
                         typed_wrong = True
                         delay_count = 200
 
@@ -108,7 +122,7 @@ def main():
         screen.blit(block, rect)
 
         # Render text red
-        block3 = font.render(letters_to_color, True, (red))
+        block3 = font.render(incorrect_letter_to_color, True, (red))
         rect3 = rect.copy()
         screen.blit(block3, rect3)
 
@@ -116,6 +130,14 @@ def main():
         block2 = font.render(letters_to_color, True, (green))
         rect2 = rect.copy()
         screen.blit(block2, rect2)
+
+        # render box for score/wpm/level
+        displayfont = pygame.font.SysFont(None, 30)
+        text = displayfont.render('level', True, (red), (white))
+        textrect = text.get_rect()
+        textrect.topright = screen.get_rect().topright
+        textrect = textrect.move_ip(50, 50)
+        screen.blit(text, textrect)
 
         pygame.display.flip()  # after drawing everything, flip the display *do this last*
 
@@ -134,6 +156,7 @@ def main():
         if typed_wrong:
             delay_count -= 10
             if delay_count == 0:
+                incorrect_letter_to_color = ""
                 typed_wrong = False
 
         # Game display
