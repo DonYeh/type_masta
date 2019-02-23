@@ -1,9 +1,9 @@
 import requests
 import sys
 import pygame
+import copy
 from word_bank import word_bank
 from compare import compare
-# from color_letters import colored_letters
 from pygame.locals import *
 
 
@@ -20,17 +20,18 @@ def main():
     # initialize pygame and create window
     pygame.init()
     pygame.mixer.init()  # for sounds
-    font = pygame.font.Font(None, 50)
+    font = pygame.font.Font(None, 77)
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('My Game')
     clock = pygame.time.Clock()
-    all_sprites = pygame.sprite.Group()
+    # all_sprites = pygame.sprite.Group()
     letters_to_color = ""
 
     # input_box = pygame.Rect(250, 250, 140, 32)
 
     # Game initialization
     did_win = False
+    typed_wrong = False
     delay_count = 30
     stop_game = False
     typed_letter = ""
@@ -44,7 +45,7 @@ def main():
         for event in pygame.event.get():
             # Event handlings
             if event.type == pygame.KEYDOWN:
-                if event.unicode.isalpha():
+                if event.unicode.isalpha() or "'":
                     typed_letter = event.unicode
                     print(word_to_spell)
                     # print(type(word_to_spell))
@@ -74,6 +75,8 @@ def main():
 
                     else:
                         print("noooope!")
+                        typed_wrong = True
+                        delay_count = 200
 
                         # change the color of the incorrect letter to red
 
@@ -104,10 +107,14 @@ def main():
         rect.center = screen.get_rect().center
         screen.blit(block, rect)
 
-        # re-Render correct/incorrect text
+        # Render text red
+        block3 = font.render(letters_to_color, True, (red))
+        rect3 = rect.copy()
+        screen.blit(block3, rect3)
+
+        # Render text green
         block2 = font.render(letters_to_color, True, (green))
-        rect2 = block2.get_rect()
-        rect2.midbottom = screen.get_rect().midbottom
+        rect2 = rect.copy()
         screen.blit(block2, rect2)
 
         pygame.display.flip()  # after drawing everything, flip the display *do this last*
@@ -116,13 +123,18 @@ def main():
 
         pygame.display.update()
         if did_win:
-            delay_count -= 1
+            delay_count -= 15
 
             if delay_count == 0:
                 did_win = False
                 index = 0
                 word_to_spell = word_bank()
                 letters_to_color = ""
+
+        if typed_wrong:
+            delay_count -= 10
+            if delay_count == 0:
+                typed_wrong = False
 
         # Game display
 
